@@ -90,6 +90,10 @@ const Component = (props) => {
                                         parse: x => Number(x),
                                     },
                                     {
+                                        value: "browserSearchMaxPage",
+                                        parse: x => Number(x),
+                                    },
+                                    {
                                         value: "keywordRankHistoryCount",
                                         parse: x => Number(x),
                                     },

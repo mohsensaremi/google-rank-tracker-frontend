@@ -3,7 +3,9 @@ import MuiDialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
+import MenuItem from '@material-ui/core/MenuItem';
 import TextField from 'final-form-field/TextField';
+import Select from 'final-form-field/Select';
 import {Field, Form} from 'react-final-form'
 import {useMutation, useQueryCache} from 'react-query';
 import {useSendHttp} from "../../../utils/network/useSendHttp";
@@ -76,6 +78,25 @@ const Dialog = (props) => {
                                 margin={"normal"}
                                 variant={"outlined"}
                             />
+                            <Field
+                                name="platform"
+                                component={Select}
+                                placeholder="Select platform"
+                                fullWidth
+                                margin={"normal"}
+                                variant={"outlined"}
+                            >
+                                {
+                                    [
+                                        {value: "desktop"},
+                                        {value: "mobile"},
+                                    ].map(x => (
+                                        <MenuItem key={x.value} value={x.value}>
+                                            {x.value}
+                                        </MenuItem>
+                                    ))
+                                }
+                            </Field>
                         </DialogContent>
                         <DialogActions>
                             <Button

@@ -3,6 +3,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import {makeStyles} from "@material-ui/core/styles";
+import red from "@material-ui/core/colors/red";
+import green from "@material-ui/core/colors/green";
 import Datatable from 'utils/components/Datatable';
 import {useDatatable} from "../../../utils/components/Datatable/useDatatable";
 import IconButton from "@material-ui/core/IconButton";
@@ -25,6 +27,17 @@ const useStyles = makeStyles(theme => ({
     },
     button: {
         marginLeft: theme.spacing(),
+    },
+    rankGreen: {
+        color: green[500],
+        fontWeight: "bold",
+    },
+    rankRed: {
+        color: red[500],
+        fontWeight: "bold",
+    },
+    lastRank2: {
+        fontSize: 13,
     },
 }));
 
@@ -119,17 +132,40 @@ const Page = () => {
                         label: "keyword",
                     },
                     {
+                        name: "platform",
+                    },
+                    {
                         name: "rank",
                         render: (row) => (
                             <Grid
                                 container
                                 spacing={1}
+                                alignItems={"center"}
                             >
                                 {
                                     row.lastRank && (
                                         <Grid item>
-                                            <Typography>
-                                                {row.lastRank.rank}
+                                            <Typography
+                                                className={
+                                                    (row.lastRank2 && row.lastRank && row.lastRank2 > row.lastRank)
+                                                        ? classes.rankGreen
+                                                        : (row.lastRank2 && row.lastRank && row.lastRank2 < row.lastRank)
+                                                        ? classes.rankRed
+                                                        : undefined
+                                                }
+                                            >
+                                                {row.lastRank}
+                                            </Typography>
+                                        </Grid>
+                                    )
+                                }
+                                {
+                                    row.lastRank2 && (
+                                        <Grid item>
+                                            <Typography
+                                                className={classes.lastRank2}
+                                            >
+                                                {`(${row.lastRank2})`}
                                             </Typography>
                                         </Grid>
                                     )
@@ -174,6 +210,7 @@ const Page = () => {
                                     variant={"outlined"}
                                     onClick={() => onClickEnqueue(row)}
                                     className={classes.button}
+                                    disabled={!!row.pendingRank}
                                 >
                                     ENQUEUE KEYWORD
                                 </Button>

@@ -41,6 +41,7 @@ export default function EnhancedTable(props) {
         data,
         isLoading,
         afterToolbar,
+        withSearch,
     } = props;
 
     const rows = data && data.data ? data.data : []
@@ -83,6 +84,9 @@ export default function EnhancedTable(props) {
             <EnhancedTableToolbar
                 title={title}
                 actions={actions}
+                config={config}
+                setConfig={setConfig}
+                withSearch={withSearch}
             />
             {afterToolbar}
             <TableContainer>

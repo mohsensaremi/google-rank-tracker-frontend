@@ -78,6 +78,8 @@ const Page = () => {
     const datatable = useDatatable(`/keyword/datatable`, {
         websiteId: params.websiteId,
         category: activeCategory,
+    }, {
+        searchColumns: ["title", "category"]
     });
 
     const sendHttp = useSendHttp();
@@ -128,6 +130,7 @@ const Page = () => {
         <Paper className={classes.root}>
             <Datatable
                 {...datatable}
+                withSearch
                 afterToolbar={(
                     <>
                         {

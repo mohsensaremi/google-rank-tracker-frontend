@@ -255,7 +255,7 @@ const Page = () => {
                                     className={classes.button}
                                     disabled={!!row.pendingRank}
                                 >
-                                    ENQUEUE KEYWORD
+                                    ENQUEUE
                                 </Button>
                                 <Button
                                     color={"primary"}

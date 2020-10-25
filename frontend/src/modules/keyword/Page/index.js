@@ -12,6 +12,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 import Dialog from "../Dialog";
 import DialogRankHistory from "../DialogRankHistory";
 import DialogRankGraph from "../DialogRankGraph";
@@ -47,6 +49,8 @@ const Page = () => {
 
     const classes = useStyles();
 
+    const [activeCategory, setActiveCategory] = useState("");
+
     const [dialog, setDialog] = useState({
         open: false,
     });
@@ -65,10 +69,15 @@ const Page = () => {
         }))
     );
 
+    const {data: categoriesRes} = useQuery(`/keyword/categories`, () =>
+        sendHttp(({
+            url: `/keyword/categories/${params.websiteId}`,
+        }))
+    );
+
     const datatable = useDatatable(`/keyword/datatable`, {
-        data: {
-            websiteId: params.websiteId,
-        },
+        websiteId: params.websiteId,
+        category: activeCategory,
     });
 
     const sendHttp = useSendHttp();
@@ -91,7 +100,8 @@ const Page = () => {
         }), {
         throwOnError: true,
         onSuccess: () => {
-            cache.invalidateQueries('/keyword/datatable')
+            cache.invalidateQueries('/keyword/datatable');
+            cache.invalidateQueries('/keyword/categories');
         },
     });
 
@@ -118,6 +128,33 @@ const Page = () => {
         <Paper className={classes.root}>
             <Datatable
                 {...datatable}
+                afterToolbar={(
+                    <>
+                        {
+                            Array.isArray(categoriesRes) && categoriesRes.length > 0 && (
+                                <Tabs
+                                    value={activeCategory}
+                                    onChange={(event, value) => setActiveCategory(value)}
+                                    variant={"fullWidth"}
+                                >
+                                    <Tab
+                                        value={""}
+                                        label={"all"}
+                                    />
+                                    {
+                                        categoriesRes.map(c => (
+                                            <Tab
+                                                key={c}
+                                                value={c}
+                                                label={c}
+                                            />
+                                        ))
+                                    }
+                                </Tabs>
+                            )
+                        }
+                    </>
+                )}
                 title={`Keywords --< ${websiteRes ? websiteRes.website : ""} >--`}
                 actions={(
                     <IconButton
@@ -130,6 +167,9 @@ const Page = () => {
                     {
                         name: "title",
                         label: "keyword",
+                    },
+                    {
+                        name: "category",
                     },
                     {
                         name: "platform",
@@ -223,7 +263,7 @@ const Page = () => {
                                         keyword: row,
                                     })}
                                 >
-                                    RANKS HISTORY
+                                    HISTORY
                                 </Button>
                                 <Button
                                     color={"primary"}
@@ -234,7 +274,7 @@ const Page = () => {
                                         keyword: row,
                                     })}
                                 >
-                                    RANKS GRAPH
+                                    GRAPH
                                 </Button>
                             </>
                         )

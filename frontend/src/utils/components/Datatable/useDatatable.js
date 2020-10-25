@@ -3,7 +3,7 @@ import {usePaginatedQuery} from "react-query";
 import {sendHttp} from "../../network/sendHttp";
 import qs from 'querystring';
 
-export const useDatatable = (url, initialConfig) => {
+export const useDatatable = (url, requestData, initialConfig) => {
 
     initialConfig = {
         skip: 0,
@@ -18,7 +18,7 @@ export const useDatatable = (url, initialConfig) => {
     const [total, setTotal] = useState(0);
     const [config, setConfig] = useReducer((state, newState) => ({...state, ...newState}), initialConfig);
 
-    const query = usePaginatedQuery([url, config], (_, config) => {
+    const query = usePaginatedQuery([url, requestData, config], (_, requestData, config) => {
         const q = qs.stringify({
             limit: config.limit,
             skip: config.skip,
@@ -26,7 +26,7 @@ export const useDatatable = (url, initialConfig) => {
             searchColumns: config.searchColumns,
             order: config.order,
             orderBy: config.orderBy,
-            ...(config.data || {}),
+            ...(requestData || {}),
         })
         return sendHttp({
             url: `${url}?${q}`,

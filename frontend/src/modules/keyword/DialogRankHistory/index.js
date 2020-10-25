@@ -71,9 +71,7 @@ const DatatableComponent = (props) => {
     });
 
     const datatable = useDatatable(`/keyword-rank/datatable`, {
-        data: {
-            keywordId: keyword ? keyword.id : null,
-        },
+        keywordId: keyword ? keyword.id : null,
     });
 
     return (

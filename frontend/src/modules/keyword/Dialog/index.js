@@ -34,7 +34,8 @@ const Dialog = (props) => {
         }), {
         throwOnError: true,
         onSuccess: () => {
-            cache.invalidateQueries('/keyword/datatable')
+            cache.invalidateQueries('/keyword/datatable');
+            cache.invalidateQueries('/keyword/categories');
         },
     })
 
@@ -74,6 +75,15 @@ const Dialog = (props) => {
                                 component={TextField}
                                 label="Keyword"
                                 placeholder="Enter your keyword"
+                                fullWidth
+                                margin={"normal"}
+                                variant={"outlined"}
+                            />
+                            <Field
+                                name="category"
+                                component={TextField}
+                                label="Category (optional)"
+                                placeholder="Enter keyword category"
                                 fullWidth
                                 margin={"normal"}
                                 variant={"outlined"}

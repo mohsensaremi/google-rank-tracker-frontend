@@ -80,6 +80,13 @@ const Component = (props) => {
                 },
                 options: {
                     maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                reverse: true,
+                            }
+                        }]
+                    },
                 }
             });
 

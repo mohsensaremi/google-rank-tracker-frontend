@@ -40,6 +40,7 @@ export default function EnhancedTable(props) {
         actions,
         data,
         isLoading,
+        afterToolbar,
     } = props;
 
     const rows = data && data.data ? data.data : []
@@ -83,6 +84,7 @@ export default function EnhancedTable(props) {
                 title={title}
                 actions={actions}
             />
+            {afterToolbar}
             <TableContainer>
                 <Table
                     className={classes.table}

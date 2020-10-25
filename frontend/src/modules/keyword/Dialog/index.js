@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from 'final-form-field/TextField';
-import Select from 'final-form-field/Select';
+import SelectField from 'final-form-field/SelectField';
 import {Field, Form} from 'react-final-form'
 import {useMutation, useQueryCache} from 'react-query';
 import {useSendHttp} from "../../../utils/network/useSendHttp";
@@ -18,6 +18,7 @@ const Dialog = (props) => {
         onClose,
         initialValues,
         websiteId,
+        categoriesRes,
     } = props;
 
     const sendHttp = useSendHttp();
@@ -42,7 +43,13 @@ const Dialog = (props) => {
 
     const onSubmit = async (data) => {
         try {
-            await mutate(data);
+            let submitData = {
+                ...data,
+                category: data.category === "addNewCategory"
+                    ? data.newCategory
+                    : data.category,
+            }
+            await mutate(submitData);
             onClose();
         } catch (e) {
             console.log("e", e);
@@ -66,59 +73,89 @@ const Dialog = (props) => {
             }
             <Form
                 onSubmit={onSubmit}
-                initialValues={initialValues}
-                render={({handleSubmit}) => (
-                    <form onSubmit={handleSubmit}>
-                        <DialogContent>
-                            <Field
-                                name="title"
-                                component={TextField}
-                                label="Keyword"
-                                placeholder="Enter your keyword"
-                                fullWidth
-                                margin={"normal"}
-                                variant={"outlined"}
-                            />
-                            <Field
-                                name="category"
-                                component={TextField}
-                                label="Category (optional)"
-                                placeholder="Enter keyword category"
-                                fullWidth
-                                margin={"normal"}
-                                variant={"outlined"}
-                            />
-                            <Field
-                                name="platform"
-                                component={Select}
-                                placeholder="Select platform"
-                                fullWidth
-                                margin={"normal"}
-                                variant={"outlined"}
-                            >
+                initialValues={{
+                    platform: "desktop",
+                    ...(initialValues || {})
+                }}
+                render={({handleSubmit, values}) => {
+                    const {category} = values || {};
+                    return (
+                        <form onSubmit={handleSubmit}>
+                            <DialogContent>
+                                <Field
+                                    name="title"
+                                    component={TextField}
+                                    label="Keyword"
+                                    placeholder="Enter your keyword"
+                                    fullWidth
+                                    margin={"normal"}
+                                    variant={"outlined"}
+                                />
+                                <Field
+                                    name="platform"
+                                    component={SelectField}
+                                    fullWidth
+                                    margin={"normal"}
+                                    variant={"outlined"}
+                                    label="Platform"
+                                >
+                                    {
+                                        [
+                                            {value: "desktop"},
+                                            {value: "mobile"},
+                                        ].map(x => (
+                                            <MenuItem key={x.value} value={x.value}>
+                                                {x.value}
+                                            </MenuItem>
+                                        ))
+                                    }
+                                </Field>
+                                <Field
+                                    name="category"
+                                    component={SelectField}
+                                    fullWidth
+                                    margin={"normal"}
+                                    variant={"outlined"}
+                                    label="Category (optional)"
+                                >
+                                    {
+                                        (categoriesRes || []).map(x => (
+                                            <MenuItem key={x} value={x}>
+                                                {x}
+                                            </MenuItem>
+                                        ))
+                                    }
+                                    <MenuItem value={"addNewCategory"}>
+                                        Add new category
+                                    </MenuItem>
+                                </Field>
                                 {
-                                    [
-                                        {value: "desktop"},
-                                        {value: "mobile"},
-                                    ].map(x => (
-                                        <MenuItem key={x.value} value={x.value}>
-                                            {x.value}
-                                        </MenuItem>
-                                    ))
+                                    category === "addNewCategory" && (
+                                        <Field
+                                            name="newCategory"
+                                            component={TextField}
+                                            label="New Category"
+                                            placeholder="Enter category name"
+                                            fullWidth
+                                            margin={"normal"}
+                                            variant={"outlined"}
+                                            autoFocus
+                                        />
+                                    )
                                 }
-                            </Field>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button
-                                variant={"contained"}
-                                color={"primary"}
-                                type={"submit"}
-                            >
-                                Submit
-                            </Button>
-                        </DialogActions>
-                    </form>
-                )}
+                            </DialogContent>
+                            <DialogActions>
+                                <Button
+                                    variant={"contained"}
+                                    color={"primary"}
+                                    type={"submit"}
+                                >
+                                    Submit
+                                </Button>
+                            </DialogActions>
+                        </form>
+                    )
+                }}
             />
         </MuiDialog>
     );

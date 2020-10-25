@@ -288,6 +288,7 @@ const Page = () => {
                 {...dialog}
                 onClose={() => setDialog({open: false})}
                 websiteId={params.websiteId}
+                categoriesRes={categoriesRes}
             />
             <DialogRankHistory
                 {...dialogRankHistory}

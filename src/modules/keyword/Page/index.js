@@ -86,7 +86,9 @@ const Page = () => {
     const cache = useQueryCache();
 
     useEffect(() => {
-        const socket = socketIOClient(process.env.REACT_APP_SOCKET_URL);
+        const socket = socketIOClient(process.env.REACT_APP_SOCKET_URL, {
+            path: process.env.REACT_APP_SOCKET_URL ? undefined : "/api/socket.io"
+        });
         socket.on("keywordRankProcessDone", () => {
             cache.invalidateQueries('/keyword/datatable')
         });

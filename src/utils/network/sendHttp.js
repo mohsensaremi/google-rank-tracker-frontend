@@ -4,7 +4,7 @@ export const sendHttp = (config) => {
     return axios({
         method: "GET",
         ...config,
-        url: `${process.env.REACT_APP_API_URL}${config.url}`,
+        url: `${process.env.REACT_APP_API_URL || "/api"}${config.url}`,
     })
         .then(res => res.data)
         .then(data => {

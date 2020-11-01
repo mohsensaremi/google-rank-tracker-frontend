@@ -140,7 +140,7 @@ const Page = () => {
                                 <Tabs
                                     value={activeCategory}
                                     onChange={(event, value) => setActiveCategory(value)}
-                                    variant={"fullWidth"}
+                                    variant={"scrollable"}
                                 >
                                     <Tab
                                         value={""}

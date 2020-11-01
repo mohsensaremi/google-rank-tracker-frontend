@@ -10,7 +10,7 @@ export const useDatatable = (url, requestData, initialConfig) => {
         limit: 25,
         search: "",
         searchColumns: [],
-        order: "desc",
+        order: "asc",
         orderBy: "_id",
         ...(initialConfig || {}),
     };
